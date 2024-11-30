@@ -1,0 +1,460 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book {{ property.name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-image: url('https://wallpapercave.com/wp/wp12549190.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+
+        .booking-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .booking-content {
+            padding: 30px;
+        }
+
+        .property-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .property-info {
+            margin-bottom: 30px;
+        }
+
+        .property-info p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .booking-form label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .booking-form .form-control {
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+        }
+
+        .book-button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .book-button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        .back-button:hover {
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .price-calculation {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .price-calculation h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .messages .alert {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'list' %}" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Back
+    </a>
+
+    <div class="container">
+        <div class="booking-container">
+            <img src="{{ property.image_url }}" alt="{{ property.name }}" class="property-image">
+            
+            <div class="booking-content">
+                <h1 class="property-title">{{ property.name }}</h1>
+                
+                <div class="property-info">
+                    <p><i class="fas fa-map-marker-alt"></i> {{ property.location }}</p>
+                    <p><i class="fas fa-dollar-sign"></i> ${{ property.price_per_night }} per night</p>
+                    {% if property.description %}
+                    <p><i class="fas fa-info-circle"></i> {{ property.description }}</p>
+                    {% endif %}
+                </div>
+
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post" class="booking-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="check_in">Check-in Date</label>
+                        <input type="date" class="form-control" id="check_in" name="check_in" required min="{{ today|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="check_out">Check-out Date</label>
+                        <input type="date" class="form-control" id="check_out" name="check_out" required min="{{ today|date:'Y-m-d' }}">
+                    </div>
+
+                    <div class="price-calculation">
+                        <h4>Price Details</h4>
+                        <p>Price per night: $<span id="price-per-night">{{ property.price_per_night }}</span></p>
+                        <p>Number of nights: <span id="num-nights">0</span></p>
+                        <p>Total price: $<span id="total-price">0</span></p>
+                    </div>
+
+                    <div id="total-price" class="mb-4">
+                        Total Price: $<span id="price-display">0</span>
+                    </div>
+
+                    <!-- Payment Method Section -->
+                    <div class="form-group">
+                        <label for="payment_method"><i class="fas fa-credit-card"></i> Payment Method</label>
+                        <select class="form-control" id="payment_method" name="payment_method" required>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="debit_card">Debit Card</option>
+                            <option value="paypal">PayPal</option>
+                        </select>
+                    </div>
+
+                    <!-- Credit/Debit Card Details -->
+                    <div id="card-details">
+                        <div class="form-group">
+                            <label for="card_number">Card Number</label>
+                            <input type="text" class="form-control" id="card_number" name="card_number" 
+                                   placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="expiry_date">Expiry Date</label>
+                                    <input type="text" class="form-control" id="expiry_date" name="expiry_date" 
+                                           placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/([0-9]{2})" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" name="cvv" 
+                                           pattern="[0-9]{3,4}" placeholder="123" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PayPal Section (hidden by default) -->
+                    <div id="paypal-details" style="display: none;">
+                        <p class="text-info">You will be redirected to PayPal to complete your payment.</p>
+                    </div>
+
+                    <button type="button" class="book-button btn-block" onclick="showConfirmationModal()">
+                        Book Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirm Your Booking</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="booking-summary">
+                        <h6 class="font-weight-bold">Booking Details:</h6>
+                        <p><strong>Property:</strong> <span id="modal-property-name">{{ property.name }}</span></p>
+                        <p><strong>Check-in:</strong> <span id="modal-check-in"></span></p>
+                        <p><strong>Check-out:</strong> <span id="modal-check-out"></span></p>
+                        <p><strong>Number of Nights:</strong> <span id="modal-num-nights"></span></p>
+                        <p><strong>Total Price:</strong> $<span id="modal-total-price"></span></p>
+                        <hr>
+                        <h6 class="font-weight-bold">Payment Details:</h6>
+                        <p><strong>Payment Method:</strong> <span id="modal-payment-method"></span></p>
+                        <div id="modal-card-details">
+                            <p><strong>Card Number:</strong> <span id="modal-card-number"></span></p>
+                            <p><strong>Expiry Date:</strong> <span id="modal-expiry-date"></span></p>
+                        </div>
+                        <div id="modal-paypal-details" style="display: none;">
+                            <p class="text-info">You will be redirected to PayPal to complete your payment.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitBooking()">Confirm Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Convert booked dates from Django to JavaScript
+        const bookedDates = {{ booked_dates|safe }};
+        
+        // Disable booked dates in the date picker
+        function disableBookedDates(date) {
+            const dateStr = date.toISOString().split('T')[0];
+            return !bookedDates.includes(dateStr);
+        }
+
+        // Calculate total price when dates change
+        function updatePrice() {
+            const checkIn = new Date(document.getElementById('check_in').value);
+            const checkOut = new Date(document.getElementById('check_out').value);
+            const pricePerNight = parseFloat(document.getElementById('price-per-night').textContent);
+
+            if (checkIn && checkOut && checkOut > checkIn) {
+                const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+                const totalPrice = nights * pricePerNight;
+                
+                document.getElementById('num-nights').textContent = nights;
+                document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+                document.getElementById('price-display').textContent = totalPrice.toFixed(2);
+            }
+        }
+
+        // Initialize date pickers
+        const checkInInput = document.getElementById('check_in');
+        const checkOutInput = document.getElementById('check_out');
+
+        // Add event listeners
+        checkInInput.addEventListener('change', function() {
+            // Update minimum date for checkout
+            const checkInDate = new Date(this.value);
+            const nextDay = new Date(checkInDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            
+            // Format the date as YYYY-MM-DD
+            const formattedNextDay = nextDay.toISOString().split('T')[0];
+            checkOutInput.min = formattedNextDay;
+            
+            // Clear checkout date if it's before the new minimum
+            if (checkOutInput.value && new Date(checkOutInput.value) <= checkInDate) {
+                checkOutInput.value = '';
+            }
+            
+            updatePrice();
+        });
+
+        checkOutInput.addEventListener('change', updatePrice);
+
+        // Disable past dates and booked dates
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const dates = document.querySelectorAll('input[type="date"]');
+        dates.forEach(function(dateInput) {
+            dateInput.addEventListener('input', function(e) {
+                const selectedDate = new Date(this.value);
+                if (!disableBookedDates(selectedDate)) {
+                    this.value = '';
+                    // Show a nice alert using SweetAlert2
+                    Swal.fire({
+                        title: 'Date Not Available',
+                        text: 'Sorry, this date is already booked. Please select another date.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#fbbf24',
+                        background: '#fff',
+                        customClass: {
+                            title: 'text-xl font-bold text-gray-800',
+                            content: 'text-gray-600',
+                            confirmButton: 'bg-yellow-500 hover:bg-yellow-600'
+                        }
+                    });
+                }
+            });
+        });
+
+        // Payment method handling
+        document.getElementById('payment_method').addEventListener('change', function() {
+            const cardDetails = document.getElementById('card-details');
+            const paypalDetails = document.getElementById('paypal-details');
+            
+            if (this.value === 'paypal') {
+                cardDetails.style.display = 'none';
+                paypalDetails.style.display = 'block';
+                // Remove required attribute from card fields
+                document.getElementById('card_number').removeAttribute('required');
+                document.getElementById('expiry_date').removeAttribute('required');
+                document.getElementById('cvv').removeAttribute('required');
+            } else {
+                cardDetails.style.display = 'block';
+                paypalDetails.style.display = 'none';
+                // Add required attribute to card fields
+                document.getElementById('card_number').setAttribute('required', '');
+                document.getElementById('expiry_date').setAttribute('required', '');
+                document.getElementById('cvv').setAttribute('required', '');
+            }
+        });
+
+        // Format card number input
+        document.getElementById('card_number').addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            this.value = value.replace(/(\d{4})/g, '$1 ').trim();
+        });
+
+        // Format expiry date input
+        document.getElementById('expiry_date').addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
+            if (value.length > 2) {
+                this.value = value.slice(0, 2) + '/' + value.slice(2);
+            } else {
+                this.value = value;
+            }
+        });
+
+        // Format CVV input
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
+            this.value = value;
+        });
+
+        // Function to show confirmation modal
+        function showConfirmationModal() {
+            // Validate form before showing modal
+            const form = document.querySelector('form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Update modal with current booking details
+            document.getElementById('modal-check-in').textContent = document.getElementById('check_in').value;
+            document.getElementById('modal-check-out').textContent = document.getElementById('check_out').value;
+            document.getElementById('modal-num-nights').textContent = document.getElementById('num-nights').textContent;
+            document.getElementById('modal-total-price').textContent = document.getElementById('price-display').textContent;
+
+            // Update payment details
+            const paymentMethod = document.getElementById('payment_method').value;
+            const paymentMethodText = document.getElementById('payment_method').options[document.getElementById('payment_method').selectedIndex].text;
+            document.getElementById('modal-payment-method').textContent = paymentMethodText;
+
+            // Show/hide appropriate payment details
+            const modalCardDetails = document.getElementById('modal-card-details');
+            const modalPaypalDetails = document.getElementById('modal-paypal-details');
+
+            if (paymentMethod === 'paypal') {
+                modalCardDetails.style.display = 'none';
+                modalPaypalDetails.style.display = 'block';
+            } else {
+                modalCardDetails.style.display = 'block';
+                modalPaypalDetails.style.display = 'none';
+                // Mask card number to show only last 4 digits
+                const cardNumber = document.getElementById('card_number').value.replace(/\s/g, '');
+                const maskedNumber = '**** **** **** ' + cardNumber.slice(-4);
+                document.getElementById('modal-card-number').textContent = maskedNumber;
+                document.getElementById('modal-expiry-date').textContent = document.getElementById('expiry_date').value;
+            }
+
+            // Show modal
+            $('#confirmationModal').modal('show');
+        }
+
+        // Function to submit the booking
+        function submitBooking() {
+            document.querySelector('form').submit();
+        }
+
+        // Show success message if exists
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    Swal.fire({
+                        title: 'Success!',
+                        text: '{{ message }}',
+                        icon: 'success',
+                        confirmButtonColor: '#fbbf24',
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                {% elif message.tags == 'error' %}
+                    Swal.fire({
+                        title: 'Error',
+                        text: '{{ message }}',
+                        icon: 'error',
+                        confirmButtonColor: '#fbbf24'
+                    });
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </script>
+</body>
+</html>

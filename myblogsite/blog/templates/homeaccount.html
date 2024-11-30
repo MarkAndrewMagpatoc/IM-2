@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: url('https://wallpapercave.com/wp/wp12549190.jpg')
+              no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .navbar h1 {
+            font-size: 2em;
+        }
+
+        /* Nav links styling */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            padding-right: 150px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 2px solid black;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-links a:hover {
+            background-color: #eee;
+        }
+
+        /* Dropdown for places */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.9);
+            min-width: 160px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show the dropdown when hovering */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Account picture styling */
+        .account-container {
+            position: relative; /* Needed for positioning dropdown */
+            display: inline-block; /* Keep it inline with the navbar */
+        }
+
+        .account-picture {
+            width: 60px; /* Size of the circle */
+            height: 60px; /* Size of the circle */
+            border-radius: 50%; /* Make it circular */
+            object-fit: cover; /* Cover the area without stretching */
+            margin-left: 10px; /* Space between the picture and the text */
+            cursor: pointer; /* Pointer cursor for clickable image */
+        }
+
+        /* Search Box */
+        .search-container {
+            display: flex;
+            justify-content: center;  /* Centers the search box horizontally */
+            align-items: center;      /* Centers the search box vertically */
+            height: 100vh;            /* Takes full viewport height */
+            padding-right: 65px;
+        }
+        
+        .search-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;         /* Sets the maximum width */
+        }
+
+        .search-box input,
+        .search-box select {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid black;
+            border-radius: 10px;
+            width: 100%; /* Ensure both input and select are the same width */
+            box-sizing: border-box; /* Includes padding and border in the element's total width */
+        }
+
+        /* Button Styling */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .button-group button {
+            background-color: #b89483;
+            color: white;
+            padding: 12px 20px;  /* Adjust padding (vertical x horizontal) */
+            font-size: 18px;      /* Adjust font size */
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            flex: 1; /* Make buttons equally take space */
+            width: auto; /* Allow the button width to adjust based on content */
+            min-width: 120px; /* Set a minimum width to avoid buttons being too small */
+        }
+
+        .button-group button:hover {
+            background-color: #1e90ff;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+            margin-top: 100px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red; /* Set text color to red */
+            font-size: 12px; /* Adjust font size */
+            margin-top: 5px; /* Space between input and error message */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <h1 style="font-size: 2em">TriStar Hotel</h1>
+        </a>
+        <div class="nav-links">
+            <!-- Links for different places -->
+            <div class="dropdown">
+                <a href="{% url 'list' %}">List Category</a>
+            </div>
+        </div>
+        <div class="account-container" id="accountContainer">
+            <img src="https://scontent.fceb8-1.fna.fbcdn.net/v/t39.30808-6/457376461_10160410969058176_7408648963545876868_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeE-qmcoAKrnAtQRbuaXBoARE0Kx57Ma8W4TQrHnsxrxbhjbGabdzU5delXM3r4qqoRft3mp9Q67wtR7HTM-pqjm&_nc_ohc=krzdOrIJDK4Q7kNvgHpagLU&_nc_zt=23&_nc_ht=scontent.fceb8-1.fna&_nc_gid=APyQG_r6FdNjVLSePQ8vNHD&oh=00_AYCLFPMXJTM9QMt-oGqLZ2xWm6JDcNRcdzuqWmlLJO5Dsg&oe=674370C1" alt="Account" class="account-picture" />
+            <div class="dropdown-content">
+                <a href="#">Settings</a>
+                <a href="{% url 'home' %}" class="logout-link">Log Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="search-container">
+        <form id="searchForm" method="POST">
+            {% csrf_token %}
+            <div class="search-box">
+                <select id="guests" name="guests" required>
+                    <option value="">Select number of guests</option>
+                    <option value="Family">Family</option>
+                    <option value="2 Person">2 Person</option>
+                    <option value="Group">Group</option>
+                </select>
+                <div id="guestsError" class="error-message"></div>
+
+                <label for="checkin">Check-in Date:</label>
+                <input type="date" id="checkin" name="checkin" required />
+                <div id="checkinError" class="error-message"></div>
+
+                <label for="checkout">Check-out Date:</label>
+                <input type="date" id="checkout" name="checkout" required />
+                <div id="checkoutError" class="error-message"></div>
+
+                <!-- Separate Buttons for House and Hotel -->
+                <div class="button-group">
+                    <!-- Link for House -->
+                    <a href="{% url 'house' %}" class="button">
+                        <button type="button" name="searchType" value="House">House</button>
+                    </a>
+                    
+                    <!-- Link for Hotel -->
+                    <a href="{% url 'hotel' %}" class="button">
+                        <button type="button" name="searchType" value="Hotel">Hotel</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Load saved form data from localStorage when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved values
+            const savedGuests = localStorage.getItem('guests');
+            const savedCheckin = localStorage.getItem('checkin');
+            const savedCheckout = localStorage.getItem('checkout');
+
+            // Set form values if they exist
+            if (savedGuests) {
+                document.getElementById('guests').value = savedGuests;
+            }
+            if (savedCheckin) {
+                document.getElementById('checkin').value = savedCheckin;
+            }
+            if (savedCheckout) {
+                document.getElementById('checkout').value = savedCheckout;
+            }
+
+            // Add event listeners to save form data
+            document.getElementById('guests').addEventListener('change', saveFormData);
+            document.getElementById('checkin').addEventListener('change', saveFormData);
+            document.getElementById('checkout').addEventListener('change', saveFormData);
+        });
+
+        // Function to save form data to localStorage
+        function saveFormData() {
+            const guests = document.getElementById('guests').value;
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+
+            localStorage.setItem('guests', guests);
+            localStorage.setItem('checkin', checkin);
+            localStorage.setItem('checkout', checkout);
+        }
+
+        // Validate dates when they change
+        document.getElementById('checkin').addEventListener('change', function() {
+            const checkin = new Date(this.value);
+            const checkout = document.getElementById('checkout');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (checkin < today) {
+                document.getElementById('checkinError').textContent = 'Check-in date cannot be in the past';
+                this.value = '';
+                localStorage.removeItem('checkin');
+            } else {
+                document.getElementById('checkinError').textContent = '';
+                // Set minimum date for checkout
+                const minCheckout = new Date(checkin);
+                minCheckout.setDate(minCheckout.getDate() + 1);
+                checkout.min = minCheckout.toISOString().split('T')[0];
+                
+                // Clear checkout if it's before new minimum
+                if (checkout.value && new Date(checkout.value) <= checkin) {
+                    checkout.value = '';
+                    localStorage.removeItem('checkout');
+                }
+            }
+        });
+
+        document.getElementById('checkout').addEventListener('change', function() {
+            const checkin = new Date(document.getElementById('checkin').value);
+            const checkout = new Date(this.value);
+
+            if (checkout <= checkin) {
+                document.getElementById('checkoutError').textContent = 'Check-out date must be after check-in date';
+                this.value = '';
+                localStorage.removeItem('checkout');
+            } else {
+                document.getElementById('checkoutError').textContent = '';
+            }
+        });
+
+        // Dropdown functionality for account picture
+        document.getElementById('accountContainer').addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown-content');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown if clicked outside
+        window.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown-content');
+            if (!event.target.matches('.account-picture') && !event.target.closest('#accountContainer')) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Clear localStorage when logging out
+        const logoutLink = document.querySelector('.logout-link');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function() {
+                localStorage.clear();
+            });
+        }
+    </script>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 TriStar Hotel. All Rights Reserved.</p>
+            <ul class="footer-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>

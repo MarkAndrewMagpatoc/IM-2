@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        background: url('https://wallpapercave.com/wp/wp12549190.jpg') no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 100px;
+      }
+
+      .navbar a {
+        text-decoration: none;
+        color: #333;
+      }
+
+      .auth-buttons a {
+        text-decoration: none;
+        color: #333;
+        padding: 10px 20px;
+        border: 2px solid black;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .auth-buttons a:hover {
+        background-color: #a67961;
+        color: #fff;
+      }
+
+      .login-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        margin: 50px auto;
+        position: relative;
+        text-align: center;
+      }
+
+      .login-container h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        text-align: left;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid black;
+        border-radius: 10px;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+
+      .form-group input[type="submit"] {
+        background-color: #b89483;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .form-group input[type="submit"]:hover {
+        background-color: #1e90ff;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 0.9em;
+        margin-top: 5px;
+        text-align: left;
+      }
+
+      .social-login {
+        margin-top: 20px;
+      }
+
+      .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .social-icon img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+      }
+
+      .social-icon img:hover {
+        transform: scale(1.1);
+      }
+
+      .footer {
+        background-color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        margin-top: 50px;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-links li {
+        display: inline;
+        margin: 0 10px;
+      }
+
+      .footer-links a {
+        text-decoration: none;
+        color: #333;
+      }
+
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="{% url 'home' %}">
+        <h1>TriStar Hotel</h1>
+      </a>
+      <div class="auth-buttons">
+        <a href="{% url 'login' %}">Sign In</a>
+        <a href="{% url 'signup' %}">Create Account</a>
+      </div>
+    </nav>
+
+    <div class="login-container" role="main">
+      <h2>Sign Up</h2>
+      <form id="signup-form" method="post" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+          />
+          <div id="usernameError" class="error-message"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+          <div id="emailError" class="error-message"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="pass1"
+            placeholder="Enter your password"
+            required
+          />
+          <div id="passwordError" class="error-message"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="pass2"
+            placeholder="Re-enter your password"
+            required
+          />
+          <div id="confirmPasswordError" class="error-message"></div>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="Sign Up" />
+        </div>
+      </form>
+
+
+    <footer class="footer">
+      <p>&copy; 2024 TriStar Hotel. All Rights Reserved.</p>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </footer>
+
+    <script>
+      function validateForm() {
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+        let isValid = true;
+
+        document.getElementById("usernameError").innerText = "";
+        document.getElementById("emailError").innerText = "";
+        document.getElementById("passwordError").innerText = "";
+        document.getElementById("confirmPasswordError").innerText = "";
+
+        if (username === "") {
+          document.getElementById("usernameError").innerText = "Username is required.";
+          isValid = false;
+        }
+
+        if (email === "") {
+          document.getElementById("emailError").innerText = "Email is required.";
+          isValid = false;
+        }
+
+        if (password.length < 6) {
+          document.getElementById("passwordError").innerText = "Password must be at least 6 characters.";
+          isValid = false;
+        }
+
+        if (password !== confirmPassword) {
+          document.getElementById("confirmPasswordError").innerText = "Passwords do not match.";
+          isValid = false;
+        }
+
+        return isValid;
+      }
+    </script>
+  </body>
+</html>

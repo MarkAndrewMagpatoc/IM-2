@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in</title>
+
+    <style>
+      /* General styling */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        background: url('https://c4.wallpaperflare.com/wallpaper/492/896/977/hotel-amfora-4k-computer-hd-wallpaper-preview.jpg')
+          no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      /* Navigation Bar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 100px;
+      }
+
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+      }
+
+      .nav-links a,
+      .auth-buttons a {
+        text-decoration: none;
+        color: #333;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 2px solid black;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .nav-links a:hover,
+      .auth-buttons a:hover {
+        background-color: #eee;
+      }
+
+      .auth-buttons a:hover {
+        background-color: #a67961;
+        color: white;
+      }
+
+      /* Sign in */
+      .login-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 50px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        margin: auto;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .login-container h2 {
+        margin-top: 0;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 2px solid black;
+        border-radius: 10px;
+      }
+
+      .form-group input[type='submit'] {
+        background-color: #b89483;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border: 2px solid #b89483;
+        border-radius: 5px;
+      }
+
+      .form-group input[type='submit']:hover {
+        background-color: #1e90ff;
+      }
+
+      /* Social Icons */
+      .social-login {
+        text-align: center;
+        margin-top: 0px;
+      }
+
+      .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+      }
+
+      .social-icon {
+        font-size: 1.5em;
+        color: black;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 100%;
+        transition: background-color 0.5s;
+      }
+
+      .social-icon:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      /* FOOTER */
+      .footer {
+        background-color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        padding: 5px;
+        width: 100%;
+        margin-top: 100px;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-links li {
+        display: inline;
+        margin: 0 15px;
+      }
+
+      .footer-links a {
+        text-decoration: none;
+        color: #333;
+      }
+
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">
+        <h1 style="font-size: 2em">TriStar Hotel</h1>
+      </a>
+      <ul class="nav-links">
+        <li><a href="places.php" class="button">List of Hotels</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <a href="{% url 'login' %}" class="button">Sign in</a>
+        <a href="{% url 'signup' %}" class="button">Create Account</a>
+      </div>
+    </nav>
+
+    <div class="login-container">
+        <form id="loginForm">
+            <h2 style="font-size:2em;">Forget Password</h2>
+            <div class="form-group">
+                <label for="username">Current Password</label>
+                <input type="text" id="username" name="username" required />
+                <div id="usernameError" style="color: red;"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">New Password</label>
+                <input type="password" id="password" name="password" required />
+                <div id="passwordError" style="color: red;"></div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login" />
+            </div>
+        </form>
+    
+        <!-- Don't Have an Account? Link -->
+    
+        <!-- Social Media Icons -->
+        <div class="social-login">
+            <p>or sign in with</p>
+            <div class="social-icons">
+                <a href="https://accounts.google.com/signin" target="_blank" class="social-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/720/720255.png" alt="Google" style="width: 50px; height: 50px;" />
+                </a>
+                <a href="https://www.facebook.com/login" target="_blank" class="social-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/800px-2021_Facebook_icon.svg.png" alt="Facebook" style="width: 50px; height: 50px;" />
+                </a>
+                <a href="https://appleid.apple.com/account/sign-in" target="_blank" class="social-icon">
+                    <img src="https://static-00.iconduck.com/assets.00/apple-round-icon-2048x2048-zvtpcb07.png" alt="Apple" style="width: 50px; height: 50px;" />
+                </a>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <p>&copy; 2024 TriStar Hotel. All Rights Reserved.</p>
+        <ul class="footer-links">
+          <li><a href="privacy-policy.php">Privacy Policy</a></li>
+          <li><a href="terms-of-service.php">Terms of Service</a></li>
+          <li><a href="contact.php">Contact Us</a></li>
+        </ul>
+      </div>
+    </footer>
+
+  
+  </body>
+</html>

@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Your Place on Tristar Hotels</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styling to match the design */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            background-image: url('https://wallpapercave.com/wp/wp12549190.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Add the dark overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://wallpapercave.com/wp/wp12549190.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            filter: brightness(0.6) contrast(1.1);
+            z-index: -1;
+        }
+
+        .header {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .properties-container {
+            position: relative;
+            z-index: 1;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .property-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .property-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .property-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .property-location {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .property-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .book-button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .book-button:hover {
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            z-index: 2;
+        }
+
+        .back-button:hover {
+            color: #ddd;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'homeaccount' %}" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Back
+    </a>
+
+    <div class="header">
+        <h1>Available Properties</h1>
+    </div>
+
+    <div class="properties-container">
+        <!-- Hotels Section -->
+        <h2 class="section-title">Hotels</h2>
+        <div class="property-grid">
+            {% for hotel in hotels %}
+            <div class="property-card">
+                <img src="{{ hotel.image_url }}" class="property-image" alt="{{ hotel.name }}">
+                <div class="property-content">
+                    <h3 class="property-title">{{ hotel.name }}</h3>
+                    <p class="property-location"><i class="fas fa-map-marker-alt"></i> {{ hotel.location }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="rating">
+                            <i class="fas fa-star text-warning"></i>
+                            <span>{{ hotel.rating }} ({{ hotel.reviews_count }})</span>
+                        </div>
+                    </div>
+                    <p class="property-description text-muted mb-3">{{ hotel.description|truncatechars:100 }}</p>
+                    <p class="property-price">${{ hotel.price_per_night }} per night</p>
+                    <a href="{% url 'bookinghotel' hotel.id %}" class="book-button">Book Now</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Houses Section -->
+        <h2 class="section-title mt-5">Houses</h2>
+        <div class="property-grid">
+            {% for house in houses %}
+            <div class="property-card">
+                <img src="{{ house.image_url }}" class="property-image" alt="{{ house.name }}">
+                <div class="property-content">
+                    <h3 class="property-title">{{ house.name }}</h3>
+                    <p class="property-location"><i class="fas fa-map-marker-alt"></i> {{ house.location }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="rating">
+                            <i class="fas fa-star text-warning"></i>
+                            <span>{{ house.rating }} ({{ house.reviews_count }})</span>
+                        </div>
+                    </div>
+                    <p class="property-description text-muted mb-3">{{ house.description|truncatechars:100 }}</p>
+                    <p class="property-info"><i class="fas fa-bed"></i> {{ house.bedrooms }} Bedroom{% if house.bedrooms > 1 %}s{% endif %}</p>
+                    <p class="property-info"><i class="fas fa-concierge-bell"></i> {{ house.amenities }}</p>
+                    <p class="property-price">${{ house.price_per_night }} per night</p>
+                    <a href="{% url 'booking' house.id %}" class="book-button">Book Now</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

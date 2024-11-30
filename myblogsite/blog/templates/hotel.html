@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-image: url('https://wallpapercave.com/wp/wp12549190.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen p-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center w-full px-8 mb-8">
+        <a href="{% url 'list' %}" class="bg-yellow-500 text-white px-4 py-2 rounded">Back</a>
+        <div class="text-center text-white">
+            <h1 class="text-4xl font-bold">Our Hotels</h1>
+            <p class="text-lg">Find your perfect stay</p>
+        </div>
+        <div class="w-24"><!-- Empty div for flex spacing --></div>
+    </div>
+
+    <!-- Hotel Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-8">
+        {% for hotel in hotels %}
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img alt="Image of {{ hotel.name }}" 
+                 class="w-full h-48 object-cover"
+                 src="{{ hotel.image_url }}"/>
+            <div class="p-6">
+                <h2 class="text-2xl font-bold mb-2">{{ hotel.name }}</h2>
+                <div class="flex items-center text-yellow-500 mb-2">
+                    <i class="fas fa-star"></i>
+                    <span class="ml-2 text-gray-600">{{ hotel.rating }} Reviews ({{ hotel.reviews_count }})</span>
+                </div>
+                <p class="text-gray-600 mb-4">{{ hotel.description }}</p>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-yellow-500 mr-2"></i>
+                        <span>{{ hotel.location }}</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-red-500 font-bold">Special Offer</span>
+                        <span class="text-gray-800 font-bold ml-2">${{ hotel.price_per_night }}/night</span>
+                    </div>
+                    <a href="{% url 'bookinghotel' hotel_id=hotel.id %}" 
+                       class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-300">
+                        Book Now
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

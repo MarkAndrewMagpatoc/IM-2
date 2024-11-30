@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        background: url('https://wallpapercave.com/wp/wp12549190.jpg') no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 100px;
+      }
+
+      .navbar a {
+        text-decoration: none;
+        color: #333;
+      }
+
+      .auth-buttons a {
+        text-decoration: none;
+        color: #333;
+        padding: 10px 20px;
+        border: 2px solid black;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .auth-buttons a:hover {
+        background-color: #a67961;
+        color: #fff;
+      }
+
+      .login-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        margin: 50px auto;
+        position: relative;
+        text-align: center;
+      }
+
+      .login-container h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        text-align: left;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid black;
+        border-radius: 10px;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+
+      .form-group input[type="submit"] {
+        background-color: #b89483;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .form-group input[type="submit"]:hover {
+        background-color: #1e90ff;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .footer {
+        background-color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        margin-top: 50px;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-links li {
+        display: inline;
+        margin: 0 10px;
+      }
+
+      .footer-links a {
+        text-decoration: none;
+        color: #333;
+      }
+
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+      button[type="submit"] {
+        background-color: #1e90ff; /* Sky blue background */
+        color: white; /* White text */
+        font-size: 1rem; /* Slightly larger font */
+        padding: 10px 20px; /* Padding around the text */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Show pointer on hover */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        transition: all 0.3s ease; /* Smooth animation */
+      }
+      
+      button[type="submit"]:hover {
+        background-color: #104e8b; /* Darker blue on hover */
+        transform: scale(1.05); /* Slightly enlarge */
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+      }
+      
+      button[type="submit"]:active {
+        background-color: #0c3b66; /* Even darker blue when pressed */
+        transform: scale(0.98); /* Slightly shrink */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow */
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="{% url 'home' %}">
+        <h1>TriStar Hotel</h1>
+      </a>
+      <div class="auth-buttons">
+        <a href="{% url 'signup' %}">Sign Up</a>
+      </div>
+    </nav>
+
+    <div class="login-container" role="main">
+      <h2>Sign In</h2>
+      
+      <!-- Error Message Handling -->
+      <div class="form-messages">
+        {% if messages %}
+          <ul>
+            {% for message in messages %}
+              <li class="error-message">{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required />
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    </div>
+
+    <footer class="footer">
+      <p>&copy; 2024 TriStar Hotel. All Rights Reserved.</p>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </footer>
+  </body>
+</html>
