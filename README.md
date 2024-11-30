@@ -55,7 +55,7 @@ Follow these steps to install the project:
 
 Clone the repository:
 
-git clone https://github.com/username/repository-name.git](https://github.com/Daniel-Stephende5/IM2-Repository.git
+git clone https://github.com/username/repository-name.git](https://github.com/MarkAndrewMagpatoc/IM-2)
 Navigate into the project directory:
 
 cd NewDjango
@@ -91,4 +91,43 @@ Run the server: Once everything is set up, start the development server:
 
 python manage.py runserver
 You can now visit the application in your browser at http://127.0.0.1:8000/. The Django admin panel can be accessed at http://127.0.0.1:8000/admin/, where you can log in using the superuser credentials you just created.
+__________________________________________________________________________________________________________________________________________________________________________________________
 
+**💻 Usage**
+
+Running the Application
+After setting up the project and starting the server with python manage.py runserver, open the following in your web browser:
+
+Home Page: http://127.0.0.1:8000/
+
+Admin Panel: http://127.0.0.1:8000/admin/ (Login using the superuser credentials you created)
+__________________________________________________________________________________________________________________________________________________________________________________________
+
+**📌 Features**
+
+Signup
+
+Login
+
+Logout
+
+Check In
+
+Check Out
+
+List of Hotel
+
+List of House
+
+Booking
+__________________________________________________________________________________________________________________________________________________________________________________________
+
+**📝 Project Documentation/Resources**
+
+UI/UX DESIGN: [Figma Prototype](https://www.figma.com/design/TktngzeTP5bf4uMTeP9248/TriStar-hotel?node-id=0-1&node-type=canvas&t=K24LS8IFFaWsJZPX-0)
+
+Gantt Chart: https://docs.google.com/spreadsheets/d/14rnpLmH4-e8J9e8jM-xr4y8bOOb3qkEWPW3cByORIsg/edit?gid=0#gid=0
+
+Entity Relationship Diagram (ERD): https://drive.google.com/file/d/1M0JjFfJIbTFTJlBcKgbeFMd3d9LltwkM/view?usp=sharing
+
+Functional Requirements Document (FRD): https://drive.google.com/file/d/11yqvEiPIjfF9QuBBk4FU_TDb-uRUCXrY/view?usp=sharing
