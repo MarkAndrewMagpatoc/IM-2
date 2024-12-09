@@ -1,9 +1,9 @@
 **HOTEL MANAGEMENT SYSTEM**
 
 Project Overview
-The Hotel and House Management System is a web-based platform designed to manage and streamline operations, bookings, customer support, and check-ins for both hotels and rental houses.
+The Hotel and House Management System is a web platform that allows users to manage bookings and check-ins for both hotels and rental houses. 
+Key features include user authentication with signup, login, and logout, options for checking in and checking out accommodations, and viewing the list of hotels available. Users can also make bookings for hotels. The system streamlines operations for employees and administrators, offering an efficient way to handle accommodation management and guest reservations.
 
-The website offers intuitive features for employees and administrators, providing a unified solution for the tracking and management of data records for both accommodations. This system is designed to efficiently capture, store, and process management data through a comprehensive digital platform tailored for the hospitality industry.
 ___________________________________________________________________________________________________________________________________________________________________________________________
 
 **🔨 Built With:**
